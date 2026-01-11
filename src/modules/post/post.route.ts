@@ -4,6 +4,7 @@ import authMiddleware, { UserRole } from "../../middleware/auth.middleware";
 
 const router: Router = Router();
 router.get("/", postControllers.getAllPost);
+router.get("/:postId", postControllers.getByAuthorId);
 router.post(
   "/",
   authMiddleware(UserRole.ADMIN, UserRole.USER),
