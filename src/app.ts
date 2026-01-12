@@ -1,4 +1,3 @@
-
 import express, {
   type Application,
   type Request,
@@ -9,6 +8,8 @@ import { postRoutes } from "./modules/post/post.route";
 import { auth } from "./lib/auth";
 import { toNodeHandler } from "better-auth/node";
 import { commentRoutes } from "./modules/comment/comment.route";
+import errorHandler from "./middleware/globalErrorHandler";
+import { notFound } from "./middleware/notFound";
 
 const app: Application = express();
 app.use(express.json());
@@ -18,18 +19,15 @@ app.use(
     credentials: true,
   })
 );
-app.all('/api/auth/*splat', toNodeHandler(auth));
+app.all("/api/auth/*splat", toNodeHandler(auth));
 //posts
-app.use('/posts',postRoutes)
+app.use("/posts", postRoutes);
 //comments
-app.use('/comments',commentRoutes)
+app.use("/comments", commentRoutes);
 app.get("/", (req: Request, res: Response) => {
   res.send("hellow world");
 });
 
-app.use((req: Request, res: Response) => {
-  res.status(404).json({
-    message: "Not Found",
-  });
-});
+app.use(notFound);
+app.use(errorHandler);
 export default app;
